@@ -1,9 +1,22 @@
-FROM python:3.7
+# Base Image
+FROM python:3.9
 
-RUN pip install fastapi uvicorn pymongo
+# Set the working directory
+WORKDIR /app
 
+# Copy the requirements file and install the dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
+
+# Copy the rest of the application code
+COPY . .
+
+# Set the environment variables
+ENV PYTHONUNBUFFERED=1
+
+# Expose the port
 EXPOSE 8000
 
-COPY ./PY_MONGO /app
+# Start the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
 
-CMD ["uvicorn", "app.index:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
